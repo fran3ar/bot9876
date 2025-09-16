@@ -1,25 +1,32 @@
 import requests
+import time
 from datetime import datetime
-import pytz  # ← NUEVO
 
-def send_telegram_message(token, chat_id, text):
-    url = f"https://api.telegram.org/bot{token}/sendMessage"
-    payload = {"chat_id": chat_id, "text": text}
-    response = requests.post(url, data=payload)
-    return response.json()
+url = "https://pageindexrepo-pjcqzhtmkf9sh9siumr5j9.streamlit.app/"  # replace with your URL
 
-# Token y chat ID (reemplazá este número con el tuyo real)
-BOT_TOKEN = "7493072528:AAGxcMz9jnItEDi01qMogvyMyxac3jjnSFw"
-CHAT_ID = 7827259260  # Reemplaza con tu chat ID real (número entero)
+def check_url():
+    try:
+        r = requests.get(url, timeout=10)  # wait max 10s
+        status = r.status_code
 
-# Definir zona horaria de Argentina
-arg_tz = pytz.timezone('America/Argentina/Buenos_Aires')
+        if status == 200:
+            print(f"[{datetime.now()}] ✅ ACTIVE - Status {status}")
+            return True
+        else:
+            print(f"[{datetime.now()}] ⚠️ WARNING - Status {status}")
+            return False
 
-# Obtener hora actual en Argentina
-hora_actual = datetime.now(arg_tz).strftime("%Y-%m-%d %H:%M:%S")
+    except requests.exceptions.Timeout:
+        print(f"[{datetime.now()}] ⏳ TIMEOUT - Page may be frozen")
+    except requests.exceptions.ConnectionError:
+        print(f"[{datetime.now()}] ❌ CONNECTION ERROR - Page is unreachable")
+    except requests.exceptions.RequestException as e:
+        print(f"[{datetime.now()}] ❌ ERROR - {e}")
 
-# Armar mensaje
-mensaje = f"🕒 Notificación automática:\nHora Argentina: {hora_actual}"
+    return False
 
-# Enviar
-send_telegram_message(BOT_TOKEN, CHAT_ID, mensaje)
+# Keep checking until active
+while True:
+    if check_url():
+        break  # stop when active
+    time.sleep(5)  # check every 5 minutes
