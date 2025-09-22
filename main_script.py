@@ -3,9 +3,7 @@ import time
 from datetime import datetime
 
 urls = [
-    "https://pageindexrepo-pjcqzhtmkf9sh9siumr5j9.streamlit.app/",
-    "https://webapp321.streamlit.app/",
-    "https://excel-report.onrender.com"
+    "https://pageindexrepo-pjcqzhtmkf9sh9siumr5j9.streamlit.app/"
 ]
 
 def check_url(url):
