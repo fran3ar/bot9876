@@ -1,9 +1,10 @@
-name: Scheduled Action Every Hour
+name: Scheduled Action Every 15 Minutes
 
 on:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '*/15 * * * *'
   workflow_dispatch:  # Allow manual runs too
+
 jobs:
   run-python-script:
     runs-on: ubuntu-latest
